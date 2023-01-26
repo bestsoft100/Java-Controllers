@@ -23,7 +23,8 @@ public class ControllerLibrarySDL extends ControllerLibrary {
 	
 	@Override
 	public void create(ControllerInputHandler controllerInputHandler) {
-		System.out.println("Init SDL");
+		initialized = false;
+				
 		if(SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_EVENTS) != 0) {
 			throw new RuntimeException("Could not initialize SDL: " + SDL_GetError());
 		}
@@ -43,7 +44,6 @@ public class ControllerLibrarySDL extends ControllerLibrary {
 			ControllerSDL controller = disconnectedControllers.get(i);
 			
 			if(controller.open()) {
-				System.out.println("Open Controller: "+controller.getIndex());
 				disconnectedControllers.remove(i--);
 				
 				controllers.add(controller);
@@ -51,6 +51,10 @@ public class ControllerLibrarySDL extends ControllerLibrary {
 					onControllerConnected(controller);
 				}
 			}
+		}
+		
+		if(!initialized) {
+			return;
 		}
 		
 		for(int i=0; i < controllers.size(); i++) {
@@ -61,12 +65,22 @@ public class ControllerLibrarySDL extends ControllerLibrary {
 			}catch (ControllerDisconnectException e) {
 				controllers.remove(i--);
 				disconnectedControllers.add(controller);
-				
-				if(initialized) {
-					onControllerDisconnected(controller);
-				}
+				onControllerDisconnected(controller);
 			}
 		}
+	}
+
+	@Override
+	public void destroy() {
+		for(int i=0; i < controllers.size(); i++) {
+			ControllerSDL controller = (ControllerSDL) controllers.get(i);
+			
+			SDL_GameControllerClose(controller.getPointer());
+		}
+		controllers.clear();
+		disconnectedControllers.clear();
+		
+		SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_EVENTS);
 	}
 
 	@Override
@@ -75,8 +89,12 @@ public class ControllerLibrarySDL extends ControllerLibrary {
 	}
 
 	@Override
-	public boolean isInitialized() {
-		return initialized;
+	public boolean supportsReconnect() {
+		return true;
 	}
 
+	@Override
+	public boolean supportsRumble() {
+		return false;
+	}
 }

@@ -13,9 +13,9 @@ public abstract class ControllerLibrary {
 	
 	public abstract void update();
 	
-	public abstract String getName();
+	public abstract void destroy();
 	
-	public abstract boolean isInitialized();
+	public abstract String getName();
 	
 	protected void onControllerConnected(Controller controller) {
 		for(int i=0; i < controllerListeners.size(); i++) {
@@ -40,5 +40,9 @@ public abstract class ControllerLibrary {
 	public void removeAllControllerListeners() {
 		controllerListeners.clear();
 	}
+	
+	public abstract boolean supportsReconnect();
+	
+	public abstract boolean supportsRumble();
 
 }

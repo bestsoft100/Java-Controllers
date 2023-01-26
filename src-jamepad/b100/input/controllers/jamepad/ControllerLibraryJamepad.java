@@ -17,8 +17,6 @@ public class ControllerLibraryJamepad extends ControllerLibrary {
 	
 	private ControllerManager controllerManager;
 	
-	private boolean initialized = false;
-	
 	private List<Controller> disconnectedControllers = new ArrayList<>();
 	
 	public ControllerLibraryJamepad(int controllerCount) {
@@ -31,18 +29,16 @@ public class ControllerLibraryJamepad extends ControllerLibrary {
 		this.controllerManager.initSDLGamepad();
 		
 		for(int i=0; i < controllerCount; i++) {
-			ControllerIndex controllerIndex = controllerManager.getControllerIndex(i);
+			ControllerIndex index = controllerManager.getControllerIndex(i);
 			
-			Controller controller = new ControllerJamepad(this, controllerIndex, controllerInputHandler); 
+			Controller controller = new ControllerJamepad(this, index, controllerInputHandler);
 			
-			if(controllerIndex.isConnected()) {
+			if(index.isConnected()) {
 				controllers.add(controller);
 			}else {
 				disconnectedControllers.add(controller);
 			}
 		}
-		
-		initialized = true;
 	}
 
 	@Override
@@ -81,10 +77,28 @@ public class ControllerLibraryJamepad extends ControllerLibrary {
 	public String getName() {
 		return "Jamepad";
 	}
+	
+	@Override
+	public void destroy() {
+		for(int i=0; i < controllers.size(); i++) {
+			ControllerJamepad controller = (ControllerJamepad) controllers.get(i);
+			controller.getIndex().close();
+		}
+		
+		controllers.clear();
+		disconnectedControllers.clear();
+		
+		this.controllerManager.quitSDLGamepad();
+	}
 
 	@Override
-	public boolean isInitialized() {
-		return initialized;
+	public boolean supportsReconnect() {
+		return true;
+	}
+
+	@Override
+	public boolean supportsRumble() {
+		return false;
 	}
 
 }

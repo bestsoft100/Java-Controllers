@@ -17,7 +17,11 @@ public class ControllerLibraryJInput extends ControllerLibrary {
 	
 	@Override
 	public void create(ControllerInputHandler controllerInputHandler) {
-		controllerEnvironment = ControllerEnvironment.getDefaultEnvironment();
+		initialized = false;
+		
+		if(controllerEnvironment == null) {
+			controllerEnvironment = ControllerEnvironment.getDefaultEnvironment();
+		}
 		
 		this.controllerInputHandler = controllerInputHandler;
 		
@@ -56,7 +60,6 @@ public class ControllerLibraryJInput extends ControllerLibrary {
 	
 	private boolean disconnect(ControllerJInput controller) {
 		controllers.remove(controller);
-		
 		onControllerDisconnected(controller);
 		
 		return true;
@@ -77,10 +80,20 @@ public class ControllerLibraryJInput extends ControllerLibrary {
 	public String getName() {
 		return "JInput";
 	}
+	
+	@Override
+	public void destroy() {
+		controllers.clear();
+	}
 
 	@Override
-	public boolean isInitialized() {
-		return initialized;
+	public boolean supportsReconnect() {
+		return false;
+	}
+
+	@Override
+	public boolean supportsRumble() {
+		return false;
 	}
 
 }
