@@ -47,11 +47,11 @@ public class ControllerJinput extends Controller {
 		addButton(new ButtonJInput(BUTTON_D_DOWN, dpad, (comp) -> comp.getPollData() > 0.6 && comp.getPollData() < 0.9));
 		addButton(new ButtonJInput(BUTTON_D_LEFT, dpad, (comp) -> (comp.getPollData() > 0.8 || comp.getPollData() < 0.2) && comp.getPollData() > 0.0));
 		
-		Button joyLeftButton = addButton(new ButtonJInput(BUTTON_JOY_LEFT, comp("8"), defaultListener));
-		Button joyRightButton = addButton(new ButtonJInput(BUTTON_JOY_RIGHT, comp("9"), defaultListener));
+		Button joyLeftButton = addButton(new ButtonJInput(BUTTON_LEFT_STICK, comp("8"), defaultListener));
+		Button joyRightButton = addButton(new ButtonJInput(BUTTON_RIGHT_STICK, comp("9"), defaultListener));
 		
-		addJoystick(new JoystickJinput(JOY_LEFT, comp("x"), comp("y"), joyLeftButton));
-		addJoystick(new JoystickJinput(JOY_RIGHT, comp("rx"), comp("ry"), joyRightButton));
+		addJoystick(new JoystickJinput(STICK_LEFT, comp("x"), comp("y"), joyLeftButton));
+		addJoystick(new JoystickJinput(STICK_RIGHT, comp("rx"), comp("ry"), joyRightButton));
 	}
 	
 	@Override
@@ -87,6 +87,11 @@ public class ControllerJinput extends Controller {
 	@Override
 	public ControllerLibrary getLibrary() {
 		return library;
+	}
+
+	@Override
+	public boolean isConnected() {
+		return true;
 	}
 
 }

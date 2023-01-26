@@ -10,24 +10,24 @@ import b100.input.controllers.Joystick;
 
 public class JoystickJamepad extends Joystick {
 
-	private ControllerIndex controllerIndex;
+	private ControllerIndex index;
 	
 	private ControllerAxis x;
 	private ControllerAxis y;
 	
-	public JoystickJamepad(int id, Button button, ControllerIndex controllerIndex, ControllerAxis x, ControllerAxis y) {
+	public JoystickJamepad(int id, Button button, ControllerIndex index, ControllerAxis x, ControllerAxis y) {
 		super(id, button);
 		
 		this.x = x;
 		this.y = y;
 		
-		this.controllerIndex = controllerIndex;
+		this.index = index;
 	}
 
 	@Override
 	protected float pollX() throws ControllerDisconnectException {
 		try {
-			return controllerIndex.getAxisState(x);
+			return index.getAxisState(x);
 		} catch (ControllerUnpluggedException e) {
 			throw new ControllerDisconnectException();
 		}
@@ -36,7 +36,7 @@ public class JoystickJamepad extends Joystick {
 	@Override
 	protected float pollY() throws ControllerDisconnectException {
 		try {
-			return controllerIndex.getAxisState(y);
+			return index.getAxisState(y);
 		}catch (ControllerUnpluggedException e) {
 			throw new ControllerDisconnectException();
 		}

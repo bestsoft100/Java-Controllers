@@ -21,7 +21,7 @@ public abstract class Button {
 	
 	protected abstract boolean pollState() throws ControllerDisconnectException;
 	
-	public final int getId() {
+	public int getId() {
 		return id;
 	}
 	
