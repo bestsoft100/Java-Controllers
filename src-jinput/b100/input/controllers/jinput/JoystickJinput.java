@@ -5,12 +5,12 @@ import b100.input.controllers.ControllerDisconnectException;
 import b100.input.controllers.Joystick;
 import net.java.games.input.Component;
 
-public class JoystickJinput extends Joystick {
+public class JoystickJInput extends Joystick {
 
 	private Component xComp;
 	private Component yComp;
 	
-	public JoystickJinput(int id, Component x, Component y, Button button) {
+	public JoystickJInput(int id, Component x, Component y, Button button) {
 		super(id, button);
 		
 		this.xComp = x;

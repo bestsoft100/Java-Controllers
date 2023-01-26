@@ -7,14 +7,14 @@ import b100.input.controllers.ControllerInputHandler;
 import b100.input.controllers.ControllerLibrary;
 import net.java.games.input.Component;
 
-public class ControllerJinput extends Controller {
+public class ControllerJInput extends Controller {
 	
 	private ControllerLibraryJInput library;
 	
 	private net.java.games.input.Controller device;
 	private Component[] components;
 	
-	public ControllerJinput(ControllerLibraryJInput library, ControllerInputHandler controllerInputHandler, net.java.games.input.Controller device) {
+	public ControllerJInput(ControllerLibraryJInput library, ControllerInputHandler controllerInputHandler, net.java.games.input.Controller device) {
 		super(controllerInputHandler);
 		this.library = library;
 		this.device = device;
@@ -50,8 +50,8 @@ public class ControllerJinput extends Controller {
 		Button joyLeftButton = addButton(new ButtonJInput(BUTTON_LEFT_STICK, comp("8"), defaultListener));
 		Button joyRightButton = addButton(new ButtonJInput(BUTTON_RIGHT_STICK, comp("9"), defaultListener));
 		
-		addJoystick(new JoystickJinput(STICK_LEFT, comp("x"), comp("y"), joyLeftButton));
-		addJoystick(new JoystickJinput(STICK_RIGHT, comp("rx"), comp("ry"), joyRightButton));
+		addJoystick(new JoystickJInput(STICK_LEFT, comp("x"), comp("y"), joyLeftButton));
+		addJoystick(new JoystickJInput(STICK_RIGHT, comp("rx"), comp("ry"), joyRightButton));
 	}
 	
 	@Override

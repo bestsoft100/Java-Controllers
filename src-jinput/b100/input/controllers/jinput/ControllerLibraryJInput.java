@@ -13,17 +13,18 @@ public class ControllerLibraryJInput extends ControllerLibrary {
 	
 	private boolean initialized = false;
 	
+	private ControllerInputHandler controllerInputHandler;
+	
 	@Override
 	public void create(ControllerInputHandler controllerInputHandler) {
 		controllerEnvironment = ControllerEnvironment.getDefaultEnvironment();
 		
-		Controller[] devices = controllerEnvironment.getControllers();
+		this.controllerInputHandler = controllerInputHandler;
 		
+		Controller[] devices = controllerEnvironment.getControllers();
 		for(Controller device : devices) {
-			Type type = device.getType();
-			
-			if(type == Type.GAMEPAD) {
-				controllers.add(new ControllerJinput(this, controllerInputHandler, device));
+			if(device.getType() == Type.GAMEPAD) {
+				connect(device);
 			}
 		}
 		
@@ -33,15 +34,43 @@ public class ControllerLibraryJInput extends ControllerLibrary {
 	@Override
 	public void update() {
 		for(int i=0; i < controllers.size(); i++) {
-			b100.input.controllers.Controller controller = controllers.get(i);
+			ControllerJInput controller = (ControllerJInput) controllers.get(i);
 			try {
 				controller.update();
 			}catch (ControllerDisconnectException e) {
-				controllers.remove(i--);
-				
-				onControllerDisconnected(controller);
+				if(disconnect(controller)) {
+					i--;
+				}
 			}
 		}
+	}
+	
+	private void connect(Controller device) {
+		ControllerJInput controller = new ControllerJInput(this, controllerInputHandler, device);
+		controllers.add(controller);
+		
+		if(initialized) {
+			onControllerConnected(controller);
+		}
+	}
+	
+	private boolean disconnect(ControllerJInput controller) {
+		controllers.remove(controller);
+		
+		onControllerDisconnected(controller);
+		
+		return true;
+	}
+	
+	public ControllerJInput getControllerForDevice(Controller device) {
+		for(int i=0; i < controllers.size(); i++) {
+			ControllerJInput controller = (ControllerJInput) controllers.get(i);
+			
+			if(controller.getDevice() == device) {
+				return controller;
+			}
+		}
+		return null;
 	}
 
 	@Override
